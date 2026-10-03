@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Archaeological Site Exploration | Hampi</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f1e8;color:#2f2a24}header{background:linear-gradient(135deg,#5d4037,#8d6e63);color:white;padding:55px 20px;text-align:center}header h1{margin:0 0 12px;font-size:38px}header p{margin:0;font-size:18px}.container{max-width:1050px;margin:30px auto;padding:0 18px}.card{background:white;border-radius:14px;padding:24px;margin-bottom:22px;box-shadow:0 4px 15px rgba(0,0,0,.08)}h2{margin-top:0;color:#5d4037}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px}button{width:100%;padding:13px;border:none;border-radius:8px;background:#795548;color:white;font-size:15px;cursor:pointer}button:hover{background:#5d4037}input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:7px;font-size:15px}.result{margin-top:15px;padding:15px;background:#f3eee7;border-radius:8px;min-height:25px;line-height:1.7}.location{padding:12px;border-left:4px solid #795548;background:#faf8f4;margin:8px 0;border-radius:5px}footer{text-align:center;padding:25px;background:#3e2723;color:white;margin-top:35px}
+</style>
+</head>
+<body>
+<header><h1>🏛️ Archaeological Site Exploration</h1><p>Hampi Exploration System using Data Structures</p></header>
+<div class="container">
+<div class="card"><h2>About the Project</h2><p>This project represents important locations of Hampi as nodes of a graph and the paths between them as edges. It demonstrates searching, BFS (Breadth First Search) and DFS (Depth First Search) using C++.</p></div>
+<div class="card"><h2>Hampi Locations</h2><div id="locations"></div></div>
+<div class="card"><h2>Explore the Graph</h2><div class="grid"><button onclick="showConnections()">🔗 Show Connections</button><button onclick="runBFS()">🔄 Run BFS</button><button onclick="runDFS()">🌳 Run DFS</button></div><div class="result" id="graphResult">Choose an option above.</div></div>
+<div class="card"><h2>Search a Location</h2><input type="text" id="searchBox" placeholder="Example: Vitthala Temple"><button onclick="searchLocation()">🔍 Search</button><div class="result" id="searchResult"></div></div>
+<div class="card"><h2>Start BFS / DFS from a Location</h2><select id="startNode"></select><div class="grid"><button onclick="runSelectedBFS()">Run BFS</button><button onclick="runSelectedDFS()">Run DFS</button></div><div class="result" id="selectedResult"></div></div>
+<div class="card"><h2>Data Structures Used</h2><div class="grid"><div class="location"><b>Graph</b><br>Represents Hampi locations and their connections.</div><div class="location"><b>Queue</b><br>Used by BFS for level-by-level traversal.</div><div class="location"><b>Recursion</b><br>Used by DFS to explore deeper paths.</div><div class="location"><b>Searching</b><br>Used to find a required Hampi location.</div></div></div>
+</div>
+<footer><p>Data Structures Micro-Project | Archaeological Site Exploration System</p><p>Example Site: Hampi</p></footer>
+<script>
+const places=["Entrance","Hemakuta Hill","Krishna Temple","Sasivekalu Ganesha","Achyutaraya Temple","Vitthala Temple"];
+const graph=[[1,2],[0,3],[0,4],[1,5],[2,5],[3,4]];
+const locationsDiv=document.getElementById("locations");places.forEach((place,i)=>{locationsDiv.innerHTML+=`<div class="location"><b>Node ${i}</b> — ${place}</div>`});
+const select=document.getElementById("startNode");places.forEach((place,i)=>{select.innerHTML+=`<option value="${i}">${i} - ${place}</option>`});
+function showConnections(){let text="";places.forEach((place,i)=>{text+=`<b>${place}</b> → ${graph[i].map(n=>places[n]).join(", ")}<br>`});document.getElementById("graphResult").innerHTML=text}
+function bfs(start){const visited=Array(places.length).fill(false),queue=[start],order=[];visited[start]=true;while(queue.length){const current=queue.shift();order.push(current);graph[current].forEach(next=>{if(!visited[next]){visited[next]=true;queue.push(next)}})}return order}
+function dfs(start){const visited=Array(places.length).fill(false),order=[];function visit(node){visited[node]=true;order.push(node);graph[node].forEach(next=>{if(!visited[next])visit(next)})}visit(start);return order}
+function formatOrder(order){return order.map(n=>places[n]).join(" → ")+" → END"}
+function runBFS(){document.getElementById("graphResult").innerHTML="<b>BFS starting from Entrance:</b><br>"+formatOrder(bfs(0))}
+function runDFS(){document.getElementById("graphResult").innerHTML="<b>DFS starting from Entrance:</b><br>"+formatOrder(dfs(0))}
+function runSelectedBFS(){const start=Number(document.getElementById("startNode").value);document.getElementById("selectedResult").innerHTML="<b>BFS Traversal:</b><br>"+formatOrder(bfs(start))}
+function runSelectedDFS(){const start=Number(document.getElementById("startNode").value);document.getElementById("selectedResult").innerHTML="<b>DFS Traversal:</b><br>"+formatOrder(dfs(start))}
+function searchLocation(){const input=document.getElementById("searchBox").value.trim().toLowerCase();const index=places.findIndex(p=>p.toLowerCase()===input);document.getElementById("searchResult").innerHTML=index!==-1?`✅ Location Found: <b>${places[index]}</b> (Node ${index})`:"❌ Location Not Found. Try entering the exact location name."}
+</script>
+</body>
+</html>
